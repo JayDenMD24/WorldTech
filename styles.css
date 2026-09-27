@@ -443,6 +443,172 @@ body {
   width: 34px;
 }
 
+/* ============ MIEMBROS ============ */
+.mi-section {
+  position: relative;
+  background: #000;
+  padding: 110px 32px 100px;
+  overflow: hidden;
+}
+
+.mi-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: url("assets/circuit.svg");
+  background-size: 760px auto;
+  background-position: -160px -60px;
+  background-repeat: no-repeat;
+  mask-image: radial-gradient(ellipse 80% 95% at 10% 20%, #000 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 95% at 10% 20%, #000 25%, transparent 78%);
+}
+
+.mi-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.mi-title {
+  text-align: center;
+  font-size: clamp(30px, 4.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+/* Coordinador */
+.mi-coord {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  background: #d7d7d7;
+  color: #111;
+  border-radius: 10px;
+  padding: 20px 28px;
+  margin-bottom: 34px;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.mi-coord:hover {
+  background: #c2c2c2;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.12);
+}
+
+.mi-role {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  opacity: 0.85;
+}
+
+.mi-coord-name {
+  font-size: clamp(19px, 2.6vw, 26px);
+  font-weight: 700;
+  margin: 2px 0;
+}
+
+.mi-coord-sub {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Avatar gris como en la referencia */
+.mi-avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #8a8a8a;
+}
+
+.mi-avatar--lg {
+  width: 84px;
+  height: 84px;
+}
+
+/* Grilla de miembros */
+.mi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 34px;
+}
+
+.mi-card {
+  background: #d7d7d7;
+  color: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.mi-card:hover {
+  background: #c2c2c2;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(255, 255, 255, 0.12);
+}
+
+.mi-card-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.55);
+}
+
+.mi-name {
+  font-size: 19px;
+  font-weight: 700;
+  flex: 1;
+}
+
+.mi-badge {
+  font-size: 12.5px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 7px 14px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.mi-card-body {
+  padding: 14px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mi-proy-label {
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.mi-proy {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: #111;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 13px 16px;
+  outline: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.mi-proy:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.mi-proy:focus {
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 900px) {
   .nav-links {
@@ -474,4 +640,9 @@ body {
   }
   .flip-card, .flip-inner { min-height: 230px; }
   .qs-foto img { min-height: 280px; max-height: 360px; }
+
+  .mi-section { padding: 90px 18px 70px; }
+  .mi-grid { grid-template-columns: 1fr; gap: 22px; }
+  .mi-coord { flex-direction: row; gap: 16px; padding: 18px; }
+  .mi-coord-sub { font-size: 12.5px; }
 }
