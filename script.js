@@ -25,6 +25,7 @@ function buildDots() {
 function waveHeight(x, y, time) {
   const nx = x / w - 0.5;
   const ny = y / h - 0.5;
+  
   // Varias ondas superpuestas para el efecto fluido de la referencia
   return (
     Math.sin(nx * 6 + time * 0.9) * 46 +
@@ -543,6 +544,24 @@ if (paModal && paImg) {
   });
   document.getElementById('paPrev').addEventListener('click', () => { paGal -= 1; paShow(); });
   document.getElementById('paNext').addEventListener('click', () => { paGal += 1; paShow(); });
+}
+
+// ===== UBICACIÓN: recentrar el mapa al entrar a la sección =====
+const ubMap = document.getElementById('ubMap');
+const ubSection = document.getElementById('ubicacion');
+if (ubMap && ubSection && 'IntersectionObserver' in window) {
+  const ubSrc = ubMap.getAttribute('src');
+  let ubFirstEntry = true;
+  let ubInside = false;
+  new IntersectionObserver((entries) => {
+    const visible = entries[0].isIntersecting;
+    if (visible && !ubInside) {
+      // Al volver a la sección, recarga el mapa centrado en la universidad
+      if (!ubFirstEntry) ubMap.src = ubSrc;
+      ubFirstEntry = false;
+    }
+    ubInside = visible;
+  }, { threshold: 0.25 }).observe(ubSection);
 }
 
 // ===== CONTACTO: correo (placeholder hasta tener el real) =====
