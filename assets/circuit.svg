@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none" stroke="#ffffff" stroke-width="2">
+  <!-- Traces horizontales / verticales estilo placa -->
+  <path d="M-20 60 H180 V140 H320" opacity="0.9"/>
+  <path d="M-20 120 H120 V220 H260 V300" opacity="0.7"/>
+  <path d="M-20 200 H200 V280 H360 V360 H480" opacity="0.9"/>
+  <path d="M-20 320 H140 V400 H300 V480 H420" opacity="0.7"/>
+  <path d="M-20 440 H100 V520 H240" opacity="0.9"/>
+  <path d="M60 -20 V100 H220 V180" opacity="0.7"/>
+  <path d="M240 -20 V80 H400 V160 H520" opacity="0.9"/>
+  <path d="M420 -20 V120 H560 V220" opacity="0.6"/>
+  <path d="M180 140 V220 H260" opacity="0.6"/>
+  <path d="M320 140 V240 H440 V320" opacity="0.6"/>
+  <path d="M360 280 H480 V440 H600" opacity="0.6"/>
+  <path d="M140 400 V480 H300" opacity="0.6"/>
+  <!-- Pads circulares -->
+  <g fill="#ffffff" stroke="none">
+    <circle cx="320" cy="140" r="7"/>
+    <circle cx="260" cy="220" r="6"/>
+    <circle cx="260" cy="300" r="7"/>
+    <circle cx="480" cy="360" r="7"/>
+    <circle cx="480" cy="440" r="6"/>
+    <circle cx="600" cy="440" r="7"/>
+    <circle cx="420" cy="480" r="7"/>
+    <circle cx="240" cy="520" r="6"/>
+    <circle cx="220" cy="100" r="6"/>
+    <circle cx="220" cy="180" r="7"/>
+    <circle cx="400" cy="80" r="6"/>
+    <circle cx="520" cy="160" r="7"/>
+    <circle cx="560" cy="120" r="6"/>
+    <circle cx="560" cy="220" r="7"/>
+    <circle cx="440" cy="240" r="6"/>
+    <circle cx="440" cy="320" r="7"/>
+    <circle cx="120" cy="120" r="6"/>
+    <circle cx="200" cy="200" r="6"/>
+    <circle cx="140" cy="320" r="7"/>
+    <circle cx="100" cy="440" r="7"/>
+    <circle cx="300" cy="400" r="6"/>
+    <circle cx="300" cy="480" r="7"/>
+  </g>
+  <!-- Pads anillo -->
+  <g opacity="0.8">
+    <circle cx="180" cy="60" r="9"/>
+    <circle cx="120" cy="220" r="8"/>
+    <circle cx="200" cy="280" r="9"/>
+    <circle cx="360" cy="360" r="8"/>
+    <circle cx="60" cy="100" r="8"/>
+    <circle cx="240" cy="80" r="8"/>
+    <circle cx="420" cy="120" r="9"/>
+  </g>
+</svg>

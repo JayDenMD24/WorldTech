@@ -69,6 +69,21 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
+// Lenis smooth scroll (solo si el CDN cargó y sin reduced-motion)
+let lenis = null;
+if (window.Lenis && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  lenis = new Lenis({
+    lerp: 0.1,
+    smoothWheel: true,
+    smoothTouch: false,
+  });
+  function lenisRaf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(lenisRaf);
+  }
+  requestAnimationFrame(lenisRaf);
+}
+
 // Menú móvil
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('navLinks');
@@ -76,10 +91,101 @@ hamburger.addEventListener('click', () => {
   const open = navLinks.classList.toggle('open');
   hamburger.setAttribute('aria-expanded', open);
 });
-navLinks.querySelectorAll('a').forEach(a =>
-  a.addEventListener('click', () => navLinks.classList.remove('open'))
-);
+// Anclas con Lenis (con fallback nativo)
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href');
+    if (id.length < 2) return;
+    const el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    navLinks.classList.remove('open');
+    if (lenis) lenis.scrollTo(el, { offset: -80, duration: 1.4 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
 
 window.addEventListener('resize', resize);
 resize();
 draw();
+
+// Flip cards: tap / teclado (hover lo maneja CSS)
+document.querySelectorAll('.flip-card').forEach((card) => {
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      card.classList.toggle('flipped');
+    }
+  });
+});
+
+// Objetivos: rotación automática con fade
+const objetivos = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.',
+  'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.',
+];
+const objTexto = document.getElementById('objTexto');
+const objDots = document.getElementById('objDots');
+let objIndex = 0;
+let objTimer = null;
+
+if (objTexto && objDots) {
+  objetivos.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('role', 'tab');
+    dot.setAttribute('aria-label', `Ver objetivo ${i + 1}`);
+    if (i === 0) {
+      dot.classList.add('active');
+      dot.setAttribute('aria-selected', 'true');
+    }
+    dot.addEventListener('click', () => {
+      if (i === objIndex) return;
+      showObjetivo(i);
+      startObjetivos(); // reinicia el conteo automático
+    });
+    objDots.appendChild(dot);
+  });
+  const dots = objDots.querySelectorAll('button');
+
+  function showObjetivo(i) {
+    objIndex = i;
+    objTexto.classList.add('fade-out');
+    setTimeout(() => {
+      objTexto.textContent = objetivos[objIndex];
+      objTexto.classList.remove('fade-out');
+      dots.forEach((d, j) => {
+        d.classList.toggle('active', j === objIndex);
+        j === objIndex
+          ? d.setAttribute('aria-selected', 'true')
+          : d.removeAttribute('aria-selected');
+      });
+    }, 400);
+  }
+
+  function startObjetivos() {
+    stopObjetivos();
+    objTimer = setInterval(() => {
+      showObjetivo((objIndex + 1) % objetivos.length);
+    }, 5000);
+  }
+
+  function stopObjetivos() {
+    if (objTimer) clearInterval(objTimer);
+  }
+
+  // Pausa al pasar el mouse sobre la caja
+  const objBox = objTexto.closest('.obj-box');
+  if (objBox) {
+    objBox.addEventListener('mouseenter', stopObjetivos);
+    objBox.addEventListener('mouseleave', startObjetivos);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    document.hidden ? stopObjetivos() : startObjetivos();
+  });
+
+  startObjetivos();
+}
