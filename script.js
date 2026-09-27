@@ -544,3 +544,11 @@ if (paModal && paImg) {
   document.getElementById('paPrev').addEventListener('click', () => { paGal -= 1; paShow(); });
   document.getElementById('paNext').addEventListener('click', () => { paGal += 1; paShow(); });
 }
+
+// ===== CONTACTO: correo (placeholder hasta tener el real) =====
+// TODO: reemplazar por el correo real del semillero
+const CONTACT_EMAIL = 'contacto@worldtech.edu.co';
+const ctMail = document.getElementById('ctMail');
+if (ctMail) {
+  ctMail.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Contacto WorldTech')}`;
+}
