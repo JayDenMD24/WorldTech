@@ -161,7 +161,72 @@
         </div>
       </div>
     </section>
-    <section id="proyectos"></section>
+    <section id="proyectos" class="pr-section">
+      <div class="pr-bg" aria-hidden="true"></div>
+      <div class="pr-container">
+        <h2 class="pr-title">Proyectos</h2>
+        <div class="pr-carousel">
+          <button class="pr-arrow" id="prPrev" aria-label="Proyectos anteriores">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+          </button>
+          <div class="pr-viewport">
+            <div class="pr-track" id="prTrack"></div>
+          </div>
+          <button class="pr-arrow" id="prNext" aria-label="Proyectos siguientes">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="pr-dots" id="prDots" role="tablist" aria-label="Elegir página de proyectos"></div>
+      </div>
+
+      <!-- Ficha del proyecto -->
+      <div class="pr-modal" id="prModal" hidden>
+        <div class="pr-modal-card" role="dialog" aria-modal="true" aria-labelledby="prFichaTitle" data-lenis-prevent>
+          <button class="pr-close" id="prClose" aria-label="Cerrar ficha">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+          <h2 class="pr-ficha-title" id="prFichaTitle">Ficha del proyecto</h2>
+          <div class="pr-ficha-grid">
+            <div class="pr-gal">
+              <div class="pr-gal-frame">
+                <img id="prGalImg" src="assets/placeholder.jpg" alt="Imagen del proyecto" />
+                <button class="pr-gal-arrow left" id="prGalPrev" aria-label="Imagen anterior">
+                  <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                </button>
+                <button class="pr-gal-arrow right" id="prGalNext" aria-label="Imagen siguiente">
+                  <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                </button>
+                <span class="pr-gal-count" id="prGalCount">1 / 2</span>
+              </div>
+              <div class="pr-gal-dots" id="prGalDots"></div>
+            </div>
+            <div class="pr-info">
+              <h3>Información general</h3>
+              <p><strong>Nombre:</strong> <span id="prNombre"></span></p>
+              <p><strong>Líneas de investigación:</strong> <span id="prLineas"></span></p>
+              <p><strong>Resumen:</strong> <span id="prResumen"></span></p>
+              <p><strong>Objetivos:</strong></p>
+              <ol id="prObjetivos"></ol>
+              <p><strong>Participó en:</strong> <span id="prPart"></span></p>
+              <p><strong>Anexos:</strong><br />
+                <a href="#" id="prAnexo1" onclick="return false"></a><br />
+                <a href="#" id="prAnexo2" onclick="return false"></a>
+              </p>
+            </div>
+          </div>
+          <div class="pr-meta">
+            <div class="pr-autores">
+              <p><strong>Autores</strong></p>
+              <div id="prAutores"></div>
+            </div>
+            <div class="pr-tec">
+              <p><strong>Tecnologías</strong></p>
+              <div id="prTec"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <section id="participaciones"></section>
     <section id="contacto"></section>
   </main>

@@ -189,3 +189,265 @@ if (objTexto && objDots) {
 
   startObjetivos();
 }
+
+// ===== PROYECTOS: carrusel 3 en 3 + ficha modal =====
+const proyectos = [
+  {
+    nombre: 'Proyecto #1',
+    lineas: 'Desarrollo web, IA...',
+    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    participacion: 'EDESI 2026, ENISI 2026',
+    anexos: ['documento.pdf', 'resultados.xlsx'],
+    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
+    autores: ['Autor 1', 'Autor 2', 'Autor 3'],
+    tecnologias: [['bi-filetype-html', 'HTML5'], ['bi-filetype-css', 'CSS3'], ['bi-filetype-js', 'JS']],
+  },
+  {
+    nombre: 'Proyecto #2',
+    lineas: 'IoT, Sistemas embebidos...',
+    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    participacion: 'EDESI 2026, ENISI 2026',
+    anexos: ['documento.pdf', 'resultados.xlsx'],
+    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
+    autores: ['Autor 1', 'Autor 2'],
+    tecnologias: [['bi-cpu', 'IoT'], ['bi-git', 'Git']],
+  },
+  {
+    nombre: 'Proyecto #3',
+    lineas: 'Visión artificial, Robótica...',
+    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    participacion: 'EDESI 2026, ENISI 2026',
+    anexos: ['documento.pdf', 'resultados.xlsx'],
+    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
+    autores: ['Autor 1', 'Autor 2', 'Autor 3'],
+    tecnologias: [['bi-filetype-py', 'Python'], ['bi-gpu-card', 'CV']],
+  },
+  {
+    nombre: 'Proyecto #4',
+    lineas: 'Desarrollo móvil, UX...',
+    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    participacion: 'EDESI 2026, ENISI 2026',
+    anexos: ['documento.pdf', 'resultados.xlsx'],
+    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
+    autores: ['Autor 1', 'Autor 2'],
+    tecnologias: [['bi-phone', 'Móvil'], ['bi-palette', 'UX']],
+  },
+  {
+    nombre: 'Proyecto #5',
+    lineas: 'Ciberseguridad, Redes...',
+    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    participacion: 'EDESI 2026, ENISI 2026',
+    anexos: ['documento.pdf', 'resultados.xlsx'],
+    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
+    autores: ['Autor 1', 'Autor 2', 'Autor 3'],
+    tecnologias: [['bi-shield-lock', 'Sec'], ['bi-hdd-network', 'Redes']],
+  },
+  {
+    nombre: 'Proyecto #6',
+    lineas: 'Datos, Machine Learning...',
+    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    participacion: 'EDESI 2026, ENISI 2026',
+    anexos: ['documento.pdf', 'resultados.xlsx'],
+    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
+    autores: ['Autor 1', 'Autor 2'],
+    tecnologias: [['bi-bar-chart', 'Datos'], ['bi-robot', 'ML']],
+  },
+];
+
+const prTrack = document.getElementById('prTrack');
+const prPrev = document.getElementById('prPrev');
+const prNext = document.getElementById('prNext');
+const prDots = document.getElementById('prDots');
+let prPage = 0;
+let prTimer = null;
+
+function prPerView() {
+  return window.innerWidth <= 900 ? 1 : 3;
+}
+function prMaxPage() {
+  return Math.max(0, Math.ceil(proyectos.length / prPerView()) - 1);
+}
+
+if (prTrack) {
+  proyectos.forEach((p, i) => {
+    const card = document.createElement('article');
+    card.className = 'pr-card' + (i % 2 === 1 ? ' dark' : '');
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `${p.nombre}: toca para saber más`);
+    card.dataset.i = i;
+    card.innerHTML = `
+      <div class="pr-card-media"><img src="${p.imagenes[0]}" alt="${p.nombre}" loading="lazy" /></div>
+      <div class="pr-card-body">
+        <h3>${p.nombre}</h3>
+        <p>${p.descripcion}</p>
+        <span class="pr-more">Toca para saber más</span>
+      </div>`;
+    prTrack.appendChild(card);
+  });
+
+  function prRenderDots() {
+    prDots.innerHTML = '';
+    for (let i = 0; i <= prMaxPage(); i++) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', `Ir a página ${i + 1}`);
+      if (i === prPage) b.classList.add('active');
+      b.addEventListener('click', () => { prGo(i); prStart(); });
+      prDots.appendChild(b);
+    }
+  }
+
+  function prGo(page) {
+    prPage = (page + prMaxPage() + 1) % (prMaxPage() + 1);
+    const pct = 100 / prPerView();
+    const gap = 24;
+    const offset = prPage * prPerView();
+    // Desplaza por página: cada página son N cards
+    const cardW = prTrack.children[0]
+      ? prTrack.children[0].getBoundingClientRect().width + gap
+      : 0;
+    prTrack.style.transform = `translateX(${-offset * cardW}px)`;
+    prTrack.parentElement.style.setProperty('--x', -offset * cardW);
+    // Fallback simple por porcentaje cuando no hay medidas aún
+    if (!cardW) prTrack.style.transform = `translateX(${-prPage * 100}%)`;
+    prDots.querySelectorAll('button').forEach((d, j) =>
+      d.classList.toggle('active', j === prPage)
+    );
+    void pct;
+  }
+
+  function prStart() {
+    prStop();
+    prTimer = setInterval(() => prGo(prPage + 1), 6000);
+  }
+  function prStop() {
+    if (prTimer) clearInterval(prTimer);
+  }
+
+  prPrev.addEventListener('click', () => { prGo(prPage - 1); prStart(); });
+  prNext.addEventListener('click', () => { prGo(prPage + 1); prStart(); });
+
+  const prCarousel = document.querySelector('.pr-carousel');
+  if (prCarousel) {
+    prCarousel.addEventListener('mouseenter', prStop);
+    prCarousel.addEventListener('mouseleave', prStart);
+  }
+  document.addEventListener('visibilitychange', () => {
+    document.hidden ? prStop() : prStart();
+  });
+  window.addEventListener('resize', () => { prRenderDots(); prGo(0); });
+
+  prRenderDots();
+  prGo(0);
+  prStart();
+
+  // ---- Modal ficha ----
+  const prModal = document.getElementById('prModal');
+  const prClose = document.getElementById('prClose');
+  const prGalImg = document.getElementById('prGalImg');
+  let fichaIndex = 0;
+  let galIndex = 0;
+
+  function prOpenFicha(i) {
+    fichaIndex = i;
+    galIndex = 0;
+    prFillFicha();
+    prModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (lenis) lenis.stop();
+    prClose.focus();
+  }
+  function prCloseFicha() {
+    prModal.hidden = true;
+    document.body.style.overflow = '';
+    if (lenis) lenis.start();
+    prStop();
+    prStart();
+  }
+  function prFillFicha() {
+    const p = proyectos[fichaIndex];
+    document.getElementById('prNombre').textContent = p.nombre;
+    document.getElementById('prLineas').textContent = p.lineas;
+    document.getElementById('prResumen').textContent = p.resumen;
+    document.getElementById('prPart').textContent = p.participacion;
+    document.getElementById('prObjetivos').innerHTML =
+      p.objetivos.map((o) => `<li>${o}</li>`).join('');
+    document.getElementById('prAnexo1').textContent = p.anexos[0] || '';
+    document.getElementById('prAnexo2').textContent = p.anexos[1] || '';
+    prShowGalImage();
+    document.getElementById('prAutores').innerHTML = p.autores
+      .map((a) => `<span title="${a}"><i class="bi bi-person-circle"></i></span>`)
+      .join('');
+    document.getElementById('prTec').innerHTML = p.tecnologias
+      .map(([icon, label]) => `<span title="${label}"><i class="bi ${icon}"></i><small>${label}</small></span>`)
+      .join('');
+  }
+
+  function prShowGalImage() {
+    const p = proyectos[fichaIndex];
+    const total = p.imagenes.length;
+    galIndex = (galIndex + total) % total;
+    prGalImg.classList.add('gal-fade');
+    setTimeout(() => {
+      prGalImg.src = p.imagenes[galIndex];
+      prGalImg.alt = `${p.nombre} - imagen ${galIndex + 1}`;
+      prGalImg.onload = () => prGalImg.classList.remove('gal-fade');
+      setTimeout(() => prGalImg.classList.remove('gal-fade'), 250);
+    }, 150);
+    document.getElementById('prGalCount').textContent = `${galIndex + 1} / ${total}`;
+    const dotsWrap = document.getElementById('prGalDots');
+    dotsWrap.innerHTML = '';
+    p.imagenes.forEach((_, k) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', `Ver imagen ${k + 1}`);
+      if (k === galIndex) b.classList.add('active');
+      b.addEventListener('click', () => { galIndex = k; prShowGalImage(); });
+      dotsWrap.appendChild(b);
+    });
+    const showArrows = total > 1;
+    document.getElementById('prGalPrev').style.display = showArrows ? '' : 'none';
+    document.getElementById('prGalNext').style.display = showArrows ? '' : 'none';
+    dotsWrap.style.display = showArrows ? '' : 'none';
+  }
+
+  prTrack.addEventListener('click', (e) => {
+    const card = e.target.closest('.pr-card');
+    if (card) prOpenFicha(Number(card.dataset.i));
+  });
+  prTrack.addEventListener('keydown', (e) => {
+    const card = e.target.closest('.pr-card');
+    if (card && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      prOpenFicha(Number(card.dataset.i));
+    }
+  });
+  prClose.addEventListener('click', prCloseFicha);
+  prModal.addEventListener('click', (e) => {
+    if (e.target === prModal) prCloseFicha();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!prModal.hidden && e.key === 'Escape') prCloseFicha();
+  });
+  document.getElementById('prGalPrev').addEventListener('click', () => {
+    galIndex -= 1;
+    prShowGalImage();
+  });
+  document.getElementById('prGalNext').addEventListener('click', () => {
+    galIndex += 1;
+    prShowGalImage();
+  });
+}
