@@ -227,7 +227,61 @@
         </div>
       </div>
     </section>
-    <section id="participaciones"></section>
+    <section id="participaciones" class="pa-section">
+      <div class="pa-bg" aria-hidden="true"></div>
+      <div class="pa-container">
+        <h2 class="pa-title">Participaciones</h2>
+        <!-- Guarda las fotos así: foto 3 → assets/part-edesi.jpg, foto 4 → assets/part-enisi.jpg, foto 5 → assets/part-redcolsi.jpg -->
+        <div class="pa-grid">
+          <article class="pa-card" data-i="0" tabindex="0" role="button" aria-label="EDESI 2026: toca para ver detalles">
+            <div class="pa-card-media">
+              <img src="assets/part-edesi.jpg" alt="EDESI 2026" loading="lazy" onerror="this.onerror=null;this.src='assets/placeholder.jpg'" />
+            </div>
+            <div class="pa-card-foot"><h3>EDESI 2026</h3><span class="pa-more">Toca para saber más</span></div>
+          </article>
+          <article class="pa-card" data-i="1" tabindex="0" role="button" aria-label="ENISI 2026: toca para ver detalles">
+            <div class="pa-card-media">
+              <img src="assets/part-enisi.jpg" alt="ENISI 2026" loading="lazy" onerror="this.onerror=null;this.src='assets/placeholder.jpg'" />
+            </div>
+            <div class="pa-card-foot"><h3>ENISI 2026</h3><span class="pa-more">Toca para saber más</span></div>
+          </article>
+          <article class="pa-card" data-i="2" tabindex="0" role="button" aria-label="RedCOLSI: toca para ver detalles">
+            <div class="pa-card-media">
+              <img src="assets/part-redcolsi.jpg" alt="RedCOLSI" loading="lazy" onerror="this.onerror=null;this.src='assets/placeholder.jpg'" />
+            </div>
+            <div class="pa-card-foot"><h3>RedCOLSI</h3><span class="pa-more">Toca para saber más</span></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Modal detalle (foto 2). La foto del visor es assets/part-detalle.jpg (foto 6) -->
+      <div class="pa-modal" id="paModal" hidden>
+        <div class="pa-modal-card" role="dialog" aria-modal="true" aria-labelledby="paModalTitle" data-lenis-prevent>
+          <button class="pa-close" id="paClose" aria-label="Cerrar detalle">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+          <div class="pa-modal-grid">
+            <div class="pa-view">
+              <button class="pa-side left" id="paPrev" aria-label="Foto anterior">
+                <i class="bi bi-caret-left-fill" aria-hidden="true"></i>
+              </button>
+              <img id="paImg" src="assets/placeholder.jpg" alt="Foto de la participación" />
+              <button class="pa-side right" id="paNext" aria-label="Foto siguiente">
+                <i class="bi bi-caret-right-fill" aria-hidden="true"></i>
+              </button>
+              <span class="pa-count" id="paCount">1 / 5</span>
+            </div>
+            <aside class="pa-panel">
+              <div class="pa-desc-box">
+                <h3 id="paModalTitle">EDESI 2026</h3>
+                <p class="pa-desc-tag">Descripcion</p>
+                <p class="pa-desc" id="paDesc"></p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
     <section id="contacto"></section>
   </main>
 

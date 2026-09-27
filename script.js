@@ -451,3 +451,96 @@ if (prTrack) {
     prShowGalImage();
   });
 }
+
+// ===== PARTICIPACIONES: tarjetas + modal detalle =====
+// Para llegar a "1 / 5" agrega más rutas en "imagenes" (máx. recomendado 5).
+// Foto 6 (visor) → assets/part-detalle.jpg — es la primera foto del modal.
+const participaciones = [
+  {
+    titulo: 'EDESI 2026',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    imagenes: ['assets/part-detalle.jpg', 'assets/part-edesi.jpg'],
+  },
+  {
+    titulo: 'ENISI 2026',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    imagenes: ['assets/part-detalle.jpg', 'assets/part-enisi.jpg'],
+  },
+  {
+    titulo: 'RedCOLSI',
+    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    imagenes: ['assets/part-detalle.jpg', 'assets/part-redcolsi.jpg'],
+  },
+];
+
+const paModal = document.getElementById('paModal');
+const paClose = document.getElementById('paClose');
+const paImg = document.getElementById('paImg');
+const paCount = document.getElementById('paCount');
+let paIndex = 0;
+let paGal = 0;
+
+if (paModal && paImg) {
+  paImg.onerror = () => {
+    if (!paImg.src.endsWith('assets/placeholder.jpg')) paImg.src = 'assets/placeholder.jpg';
+  };
+
+  function paShow() {
+    const p = participaciones[paIndex];
+    const total = p.imagenes.length;
+    paGal = (paGal + total) % total;
+    paImg.classList.add('pa-fade');
+    setTimeout(() => {
+      paImg.src = p.imagenes[paGal];
+      paImg.alt = `${p.titulo} - foto ${paGal + 1}`;
+      paImg.onload = () => paImg.classList.remove('pa-fade');
+      setTimeout(() => paImg.classList.remove('pa-fade'), 250);
+    }, 150);
+    paCount.textContent = `${paGal + 1} / ${total}`;
+    const multi = total > 1;
+    document.getElementById('paPrev').style.display = multi ? '' : 'none';
+    document.getElementById('paNext').style.display = multi ? '' : 'none';
+  }
+
+  function paOpen(i) {
+    paIndex = i;
+    paGal = 0;
+    const p = participaciones[paIndex];
+    document.getElementById('paModalTitle').textContent = p.titulo;
+    document.getElementById('paDesc').textContent = p.descripcion;
+    paShow();
+    paModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    if (lenis) lenis.stop();
+    paClose.focus();
+  }
+
+  function paCloseModal() {
+    paModal.hidden = true;
+    document.body.style.overflow = '';
+    if (lenis) lenis.start();
+  }
+
+  document.querySelectorAll('.pa-card').forEach((card) => {
+    card.addEventListener('click', () => paOpen(Number(card.dataset.i)));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        paOpen(Number(card.dataset.i));
+      }
+    });
+  });
+
+  paClose.addEventListener('click', paCloseModal);
+  paModal.addEventListener('click', (e) => {
+    if (e.target === paModal) paCloseModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (paModal.hidden) return;
+    if (e.key === 'Escape') paCloseModal();
+    if (e.key === 'ArrowLeft') { paGal -= 1; paShow(); }
+    if (e.key === 'ArrowRight') { paGal += 1; paShow(); }
+  });
+  document.getElementById('paPrev').addEventListener('click', () => { paGal -= 1; paShow(); });
+  document.getElementById('paNext').addEventListener('click', () => { paGal += 1; paShow(); });
+}
