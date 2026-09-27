@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WorldTech | Semillero de Investigación</title>
+  <meta name="description" content="WorldTech - Semillero de investigación en tecnología, proyectos, miembros y participaciones." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="assets/logo.jpeg" />
+</head>
+<body>
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="#" class="brand" aria-label="WorldTech inicio">
+        <!-- Guarda la segunda imagen como assets/logo.png -->
+        <img src="assets/logo.jpeg" alt="Icono WorldTech" class="brand-logo"
+             onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'" />
+        <!-- Fallback SVG estilo circuito/globo por si aún no agregas el png -->
+        <svg id="logo-fallback" viewBox="0 0 64 64" fill="none" style="display:none" aria-hidden="true">
+          <circle cx="32" cy="32" r="14" stroke="#fff" stroke-width="2"/>
+          <path d="M32 4v8M32 52v8M4 32h8M52 32h8M14 14l6 6M44 44l6 6M50 14l-6 6M20 44l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="32" cy="4" r="2.5" fill="#fff"/><circle cx="32" cy="60" r="2.5" fill="#fff"/>
+          <circle cx="4" cy="32" r="2.5" fill="#fff"/><circle cx="60" cy="32" r="2.5" fill="#fff"/>
+        </svg>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#quienes-somos">¿Quienes somos?</a></li>
+        <li><a href="#miembros">Miembros</a></li>
+        <li><a href="#proyectos">Proyectos</a></li>
+        <li><a href="#participaciones">Participaciones</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#contacto" class="btn-contact">Contactanos</a>
+        <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav-line"></div>
+  </nav>
+
+  <!-- ===== HEADER / HERO ===== -->
+  <header class="hero" id="inicio">
+    <canvas id="wave"></canvas>
+    <div class="hero-vignette"></div>
+
+    <div class="hero-content">
+      <p class="hero-kicker"><span class="dot"></span> Semillero de Investigación</p>
+      <h1 class="hero-title">WORLD<span>TECH</span></h1>
+      <p class="hero-sub">
+        Exploramos, creamos y compartimos tecnología.<br />
+        Circuitos, código y conocimiento que conecta al mundo.
+      </p>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <span></span>
+    </div>
+  </header>
+
+  <!-- Anclas vacías para que el navbar ya navegue a las próximas secciones -->
+  <main>
+    <section id="quienes-somos"></section>
+    <section id="miembros"></section>
+    <section id="proyectos"></section>
+    <section id="participaciones"></section>
+    <section id="contacto"></section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
