@@ -3,25 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WorldTech | Semillero de Investigación</title>
+  <title>WorldTech</title>
   <meta name="description" content="WorldTech - Semillero de investigación en tecnología, proyectos, miembros y participaciones." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css" />
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/png" href="assets/logo.jpeg" />
+  <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png" />
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
 </head>
 <body>
+  <!-- Textura de circuito única y fija: se ve continua detrás de todas las secciones -->
+  <div class="bg-decoration" aria-hidden="true"></div>
+
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar">
     <div class="nav-inner">
       <a href="#" class="brand" aria-label="WorldTech inicio">
-        <!-- Guarda la segunda imagen como assets/logo.png -->
-        <img src="assets/logo.jpeg" alt="Icono WorldTech" class="brand-logo"
+        <img src="assets/logo.png" alt="Icono WorldTech" class="brand-logo"
              onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'" />
-        <!-- Fallback SVG estilo circuito/globo por si aún no agregas el png -->
+        <!-- Fallback SVG estilo circuito/globo si logo.png no carga -->
         <svg id="logo-fallback" viewBox="0 0 64 64" fill="none" style="display:none" aria-hidden="true">
           <circle cx="32" cy="32" r="14" stroke="#fff" stroke-width="2"/>
           <path d="M32 4v8M32 52v8M4 32h8M52 32h8M14 14l6 6M44 44l6 6M50 14l-6 6M20 44l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
@@ -31,7 +36,7 @@
       </a>
 
       <ul class="nav-links" id="navLinks">
-        <li><a href="#quienes-somos">¿Quienes somos?</a></li>
+        <li><a href="#quienes-somos">¿Quiénes somos?</a></li>
         <li><a href="#miembros">Miembros</a></li>
         <li><a href="#proyectos">Proyectos</a></li>
         <li><a href="#participaciones">Participaciones</a></li>
@@ -39,7 +44,7 @@
       </ul>
 
       <div class="nav-actions">
-        <a href="#contacto" class="btn-contact">Contactanos</a>
+        <a href="#contacto" class="btn-contact">Contáctanos</a>
         <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -54,32 +59,29 @@
     <div class="hero-vignette"></div>
 
     <div class="hero-content">
-      <p class="hero-kicker"><span class="dot"></span> Semillero de Investigación</p>
       <h1 class="hero-title">WORLD<span>TECH</span></h1>
+      <p class="hero-kicker">Semillero de Investigación</p>
       <p class="hero-sub">
         Exploramos, creamos y compartimos tecnología.<br />
         Circuitos, código y conocimiento que conecta al mundo.
       </p>
-    </div>
-
-    <div class="hero-scroll" aria-hidden="true">
-      <span></span>
     </div>
   </header>
 
   <!-- Anclas vacías para que el navbar ya navegue a las próximas secciones -->
   <main>
     <section id="quienes-somos" class="qs-section">
-      <div class="qs-bg" aria-hidden="true"></div>
       <div class="qs-container">
         <h2 class="qs-title">¿Quiénes somos?</h2>
+        <p class="section-sub">Conoce la misión, visión y objetivos que guían a nuestro semillero de investigación.</p>
         <div class="qs-grid">
           <!-- Misión: flip card -->
-          <div class="flip-card" tabindex="0" role="button" aria-label="Misión: activa para ver el texto">
+          <div class="flip-card" tabindex="0" role="button" aria-label="Misión: toca para ver el texto">
             <div class="flip-inner">
               <div class="flip-front">
                 <i class="bi bi-flag-fill flip-icon" aria-hidden="true"></i>
                 <span class="flip-label">Misión</span>
+                <span class="flip-hint">Toca para saber más</span>
               </div>
               <div class="flip-back">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
@@ -88,11 +90,12 @@
           </div>
 
           <!-- Visión: flip card -->
-          <div class="flip-card" tabindex="0" role="button" aria-label="Visión: activa para ver el texto">
+          <div class="flip-card" tabindex="0" role="button" aria-label="Visión: toca para ver el texto">
             <div class="flip-inner">
               <div class="flip-front">
                 <i class="bi bi-eye-fill flip-icon" aria-hidden="true"></i>
                 <span class="flip-label">Visión</span>
+                <span class="flip-hint">Toca para saber más</span>
               </div>
               <div class="flip-back">
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
@@ -117,28 +120,32 @@
       </div>
     </section>
     <section id="miembros" class="mi-section">
-      <div class="mi-bg" aria-hidden="true"></div>
       <div class="mi-container">
         <h2 class="mi-title">Miembros</h2>
+        <p class="section-sub">El equipo de estudiantes e investigadores que impulsa cada proyecto de WorldTech.</p>
 
         <!-- Coordinador: tarjeta ancha -->
         <article class="mi-coord">
           <span class="mi-avatar mi-avatar--lg" aria-hidden="true"></span>
           <div class="mi-coord-text">
             <p class="mi-role">COORDINADOR DE SEMILLERO</p>
-            <h3 class="mi-coord-name">Ing. [Nombre del coordinador]</h3>
+            <h3 class="mi-coord-name">[Nombre del coordinador]</h3>
             <p class="mi-coord-sub">Universidad del Sinú · Ingeniería de Sistemas · WorldTech</p>
           </div>
         </article>
+      </div>
 
-        <!-- Miembros: grilla de tarjetas -->
-        <div class="mi-grid">
-          <!-- Duplica este article por cada miembro -->
+      <!-- Carrusel infinito de miembros (se arrastra con el mouse para detenerlo).
+           Solo hace falta duplicar aquí cada <article class="mi-card"> por miembro nuevo: script.js clona el bloque. -->
+      <div class="mi-carousel">
+        <div class="mi-track" id="miTrack">
           <article class="mi-card">
             <div class="mi-card-head">
               <span class="mi-avatar" aria-hidden="true"></span>
-              <h3 class="mi-name">José Medrano</h3>
-              <span class="mi-badge">Sem. 9°</span>
+              <div class="mi-name-group">
+                <h3 class="mi-name">[Nombre del miembro]</h3>
+                <span class="mi-badge">Sem. X°</span>
+              </div>
             </div>
             <div class="mi-card-body">
               <p class="mi-proy-label">Proyectos</p>
@@ -146,12 +153,69 @@
               <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
             </div>
           </article>
-
           <article class="mi-card">
             <div class="mi-card-head">
               <span class="mi-avatar" aria-hidden="true"></span>
-              <h3 class="mi-name">José Medrano</h3>
-              <span class="mi-badge">Sem. 9°</span>
+              <div class="mi-name-group">
+                <h3 class="mi-name">[Nombre del miembro]</h3>
+                <span class="mi-badge">Sem. X°</span>
+              </div>
+            </div>
+            <div class="mi-card-body">
+              <p class="mi-proy-label">Proyectos</p>
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+            </div>
+          </article>
+          <article class="mi-card">
+            <div class="mi-card-head">
+              <span class="mi-avatar" aria-hidden="true"></span>
+              <div class="mi-name-group">
+                <h3 class="mi-name">[Nombre del miembro]</h3>
+                <span class="mi-badge">Sem. X°</span>
+              </div>
+            </div>
+            <div class="mi-card-body">
+              <p class="mi-proy-label">Proyectos</p>
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+            </div>
+          </article>
+          <article class="mi-card">
+            <div class="mi-card-head">
+              <span class="mi-avatar" aria-hidden="true"></span>
+              <div class="mi-name-group">
+                <h3 class="mi-name">[Nombre del miembro]</h3>
+                <span class="mi-badge">Sem. X°</span>
+              </div>
+            </div>
+            <div class="mi-card-body">
+              <p class="mi-proy-label">Proyectos</p>
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+            </div>
+          </article>
+          <article class="mi-card">
+            <div class="mi-card-head">
+              <span class="mi-avatar" aria-hidden="true"></span>
+              <div class="mi-name-group">
+                <h3 class="mi-name">[Nombre del miembro]</h3>
+                <span class="mi-badge">Sem. X°</span>
+              </div>
+            </div>
+            <div class="mi-card-body">
+              <p class="mi-proy-label">Proyectos</p>
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+              <input class="mi-proy" type="text" value="Nombre del proyecto" aria-label="Nombre del proyecto" />
+            </div>
+          </article>
+          <article class="mi-card">
+            <div class="mi-card-head">
+              <span class="mi-avatar" aria-hidden="true"></span>
+              <div class="mi-name-group">
+                <h3 class="mi-name">[Nombre del miembro]</h3>
+                <span class="mi-badge">Sem. X°</span>
+              </div>
             </div>
             <div class="mi-card-body">
               <p class="mi-proy-label">Proyectos</p>
@@ -163,9 +227,9 @@
       </div>
     </section>
     <section id="proyectos" class="pr-section">
-      <div class="pr-bg" aria-hidden="true"></div>
       <div class="pr-container">
         <h2 class="pr-title">Proyectos</h2>
+        <p class="section-sub">Una muestra de las investigaciones y desarrollos que hemos construido.</p>
         <div class="pr-carousel">
           <button class="pr-arrow" id="prPrev" aria-label="Proyectos anteriores">
             <i class="bi bi-chevron-left" aria-hidden="true"></i>
@@ -229,9 +293,9 @@
       </div>
     </section>
     <section id="participaciones" class="pa-section">
-      <div class="pa-bg" aria-hidden="true"></div>
       <div class="pa-container">
         <h2 class="pa-title">Participaciones</h2>
+        <p class="section-sub">Los eventos y encuentros académicos donde hemos representado al semillero.</p>
         <!-- Guarda las fotos así: foto 3 → assets/part-edesi.jpg, foto 4 → assets/part-enisi.jpg, foto 5 → assets/part-redcolsi.jpg -->
         <div class="pa-grid">
           <article class="pa-card" data-i="0" tabindex="0" role="button" aria-label="EDESI 2026: toca para ver detalles">
@@ -264,18 +328,18 @@
           <div class="pa-modal-grid">
             <div class="pa-view">
               <button class="pa-side left" id="paPrev" aria-label="Foto anterior">
-                <i class="bi bi-caret-left-fill" aria-hidden="true"></i>
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
               </button>
               <img id="paImg" src="assets/placeholder.jpg" alt="Foto de la participación" />
               <button class="pa-side right" id="paNext" aria-label="Foto siguiente">
-                <i class="bi bi-caret-right-fill" aria-hidden="true"></i>
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </button>
               <span class="pa-count" id="paCount">1 / 5</span>
             </div>
             <aside class="pa-panel">
               <div class="pa-desc-box">
                 <h3 id="paModalTitle">EDESI 2026</h3>
-                <p class="pa-desc-tag">Descripcion</p>
+                <p class="pa-desc-tag">Descripción</p>
                 <p class="pa-desc" id="paDesc"></p>
               </div>
             </aside>
@@ -283,23 +347,9 @@
         </div>
       </div>
     </section>
-    <section id="contacto" class="ct-section">
-      <div class="ct-container">
-        <div class="ct-panel">
-          <div class="ct-dome" aria-hidden="true"></div>
-          <h2 class="ct-title">Información de contacto</h2>
-          <p class="ct-sub">¿Tienes un proyecto en mente o quieres unirte a uno?<br />Contacta con nosotros aquí abajo</p>
-          <a class="ct-btn" id="ctMail" href="mailto:contacto@worldtech.edu.co?subject=Contacto%20WorldTech">
-            <i class="bi bi-envelope-fill" aria-hidden="true"></i>
-            <span>Correo de contacto</span>
-          </a>
-        </div>
-      </div>
-    </section>
     <section id="ubicacion" class="ub-section">
-      <div class="ub-bg" aria-hidden="true"></div>
       <div class="ub-container">
-        <h2 class="ub-title">¿Donde estamos ubicados?</h2>
+        <h2 class="ub-title">¿Dónde estamos ubicados?</h2>
         <p class="ub-sub">Nos encontramos ubicados en la Universidad del Sinú Elías Bechara Zainúm sede Montería</p>
         <p class="ub-addr">
           <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
@@ -321,15 +371,28 @@
         </a>
       </div>
     </section>
+    <section id="contacto" class="ct-section">
+      <div class="ct-container">
+        <div class="ct-panel">
+          <h2 class="ct-title">Información de contacto</h2>
+          <p class="ct-sub">¿Tienes un proyecto en mente o quieres unirte a uno?<br />Contacta con nosotros aquí abajo</p>
+          <a class="ct-btn" id="ctMail" href="mailto:contacto@worldtech.edu.co?subject=Contacto%20WorldTech">
+            <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+            <span>Correo de contacto</span>
+          </a>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="ft-inner">
-      <div class="ft-center">
-        <p class="ft-title">Semillero WorldTech</p>
-        <p class="ft-small">© Todos los derechos reservados<br />Politica de tratamiento de datos personales</p>
+      <p class="ft-copy">© WorldTech<br />Todos los derechos reservados</p>
+      <div class="ft-brand-group">
+        <p class="ft-brand">WORLD<span>TECH</span></p>
+        <p class="ft-tagline">Semillero de Investigación</p>
       </div>
-      <p class="ft-credit">Pagina por<br />José Medrano<br />Katherine Vélez</p>
+      <p class="ft-credit"><strong>Página por</strong><br />José Medrano<br />Katherine Vélez</p>
     </div>
   </footer>
 

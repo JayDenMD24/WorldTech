@@ -67,7 +67,16 @@ function draw() {
   ctx.lineWidth = 1.4;
   ctx.stroke();
 
-  requestAnimationFrame(draw);
+  waveRaf = requestAnimationFrame(draw);
+}
+
+// Pausa el dibujo cuando el hero no está en pantalla (ahorra CPU/batería al bajar por la página)
+let waveRaf = null;
+function startWave() {
+  if (waveRaf === null) waveRaf = requestAnimationFrame(draw);
+}
+function stopWave() {
+  if (waveRaf !== null) { cancelAnimationFrame(waveRaf); waveRaf = null; }
 }
 
 // Lenis smooth scroll (solo si el CDN cargó y sin reduced-motion)
@@ -108,9 +117,119 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 
 window.addEventListener('resize', resize);
 resize();
-draw();
 
-// Flip cards: tap / teclado (hover lo maneja CSS)
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver((entries) => {
+    entries[0].isIntersecting ? startWave() : stopWave();
+  }).observe(canvas);
+} else {
+  startWave();
+}
+
+// ===== MIEMBROS: carrusel infinito, arrastrable con el mouse =====
+// Duplica las tarjetas una vez para que el loop sea parejo (sin salto visible).
+const miTrack = document.getElementById('miTrack');
+if (miTrack) {
+  const originalCards = [...miTrack.children];
+  originalCards.forEach((card) => {
+    const clone = card.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.querySelectorAll('input').forEach((input) => (input.tabIndex = -1));
+    miTrack.appendChild(clone);
+  });
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SPEED = 0.6; // px por frame
+  let miPos = 0;
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartPos = 0;
+  let halfWidth = 0;
+
+  function measure() {
+    halfWidth = miTrack.scrollWidth / 2;
+  }
+
+  function normalize() {
+    if (halfWidth <= 0) return;
+    while (miPos <= -halfWidth) miPos += halfWidth;
+    while (miPos > 0) miPos -= halfWidth;
+  }
+
+  function render() {
+    miTrack.style.transform = `translateX(${miPos}px)`;
+  }
+
+  let miRaf = null;
+  function tick() {
+    if (!dragging && !reduceMotion) {
+      miPos -= SPEED;
+      normalize();
+      render();
+    }
+    miRaf = requestAnimationFrame(tick);
+  }
+  function startTick() {
+    if (miRaf === null) miRaf = requestAnimationFrame(tick);
+  }
+  function stopTick() {
+    if (miRaf !== null) { cancelAnimationFrame(miRaf); miRaf = null; }
+  }
+
+  measure();
+  window.addEventListener('resize', measure);
+
+  // Pausa el carrusel cuando no está en pantalla (ahorra CPU/batería)
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      entries[0].isIntersecting ? startTick() : stopTick();
+    }).observe(miTrack);
+  } else {
+    startTick();
+  }
+
+  let dragPointerId = null;
+  let dragMoved = false;
+
+  miTrack.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') return; // en táctil se deja el scroll nativo/autoplay
+    dragging = true;
+    dragMoved = false;
+    dragStartX = e.clientX;
+    dragStartPos = miPos;
+    dragPointerId = e.pointerId;
+  });
+
+  miTrack.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    if (!dragMoved && Math.abs(e.clientX - dragStartX) > 5) {
+      dragMoved = true;
+      miTrack.classList.add('dragging');
+      // Capturar el puntero solo al confirmar arrastre real: hacerlo desde pointerdown
+      // redirige el click resultante al propio track en vez de al elemento tocado
+      // (por ejemplo los inputs .mi-proy dejarían de poder enfocarse con un click normal).
+      try { miTrack.setPointerCapture(dragPointerId); } catch (err) { /* noop */ }
+    }
+    if (!dragMoved) return;
+    miPos = dragStartPos + (e.clientX - dragStartX);
+    normalize();
+    render();
+  });
+
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    miTrack.classList.remove('dragging');
+    if (miTrack.hasPointerCapture && e && miTrack.hasPointerCapture(e.pointerId)) {
+      miTrack.releasePointerCapture(e.pointerId);
+    }
+  }
+
+  miTrack.addEventListener('pointerup', endDrag);
+  miTrack.addEventListener('pointercancel', endDrag);
+}
+
+// Flip cards: solo se giran con click/teclado (no con hover)
 document.querySelectorAll('.flip-card').forEach((card) => {
   card.addEventListener('click', () => card.classList.toggle('flipped'));
   card.addEventListener('keydown', (e) => {
@@ -268,11 +387,13 @@ const proyectos = [
 ];
 
 const prTrack = document.getElementById('prTrack');
+const prViewport = document.querySelector('.pr-viewport');
 const prPrev = document.getElementById('prPrev');
 const prNext = document.getElementById('prNext');
 const prDots = document.getElementById('prDots');
 let prPage = 0;
 let prTimer = null;
+let prSyncingScroll = false;
 
 function prPerView() {
   return window.innerWidth <= 900 ? 1 : 3;
@@ -311,24 +432,48 @@ if (prTrack) {
     }
   }
 
+  const PR_GAP = 24;
+
+  // Fija el ancho de cada card en píxeles (en vez de depender del % de calc() en CSS, que se
+  // resuelve contra el ancho del propio track y puede no coincidir exacto con el visor).
+  // Así el ancho de las cards y el desplazamiento del carrusel usan siempre la misma referencia,
+  // sin desajustes de subpíxel que cortaran el borde de alguna card.
+  function prSizeCards() {
+    const perView = prPerView();
+    const viewportWidth = prViewport.getBoundingClientRect().width;
+    const cardWidth = (viewportWidth - PR_GAP * (perView - 1)) / perView;
+    [...prTrack.children].forEach((card) => {
+      card.style.flex = `0 0 ${cardWidth}px`;
+    });
+  }
+
   function prGo(page) {
     prPage = (page + prMaxPage() + 1) % (prMaxPage() + 1);
-    const pct = 100 / prPerView();
-    const gap = 24;
-    const offset = prPage * prPerView();
-    // Desplaza por página: cada página son N cards
-    const cardW = prTrack.children[0]
-      ? prTrack.children[0].getBoundingClientRect().width + gap
-      : 0;
-    prTrack.style.transform = `translateX(${-offset * cardW}px)`;
-    prTrack.parentElement.style.setProperty('--x', -offset * cardW);
-    // Fallback simple por porcentaje cuando no hay medidas aún
-    if (!cardW) prTrack.style.transform = `translateX(${-prPage * 100}%)`;
+    const viewportWidth = prViewport.getBoundingClientRect().width;
+    prSyncingScroll = true;
+    prViewport.scrollTo({ left: prPage * viewportWidth, behavior: 'smooth' });
     prDots.querySelectorAll('button').forEach((d, j) =>
       d.classList.toggle('active', j === prPage)
     );
-    void pct;
   }
+
+  // Si el usuario arrastra/hace scroll manual en el carrusel, mantiene los puntos sincronizados
+  // con la página real que quedó a la vista.
+  let prScrollTimer = null;
+  prViewport.addEventListener('scroll', () => {
+    if (prSyncingScroll) {
+      clearTimeout(prScrollTimer);
+      prScrollTimer = setTimeout(() => { prSyncingScroll = false; }, 400);
+      return;
+    }
+    clearTimeout(prScrollTimer);
+    prScrollTimer = setTimeout(() => {
+      const viewportWidth = prViewport.getBoundingClientRect().width;
+      const page = Math.round(prViewport.scrollLeft / viewportWidth);
+      prPage = Math.max(0, Math.min(prMaxPage(), page));
+      prDots.querySelectorAll('button').forEach((d, j) => d.classList.toggle('active', j === prPage));
+    }, 120);
+  });
 
   function prStart() {
     prStop();
@@ -341,6 +486,54 @@ if (prTrack) {
   prPrev.addEventListener('click', () => { prGo(prPage - 1); prStart(); });
   prNext.addEventListener('click', () => { prGo(prPage + 1); prStart(); });
 
+  // El scroll nativo no se arrastra con el mouse en escritorio (solo con dedo/trackpad), así que
+  // se agrega arrastre manual moviendo scrollLeft directamente (sin transform, no reintroduce el
+  // bug de clipping). Al soltar, ajusta a la página más cercana.
+  let prDragging = false;
+  let prDragMoved = false;
+  let prDragStartX = 0;
+  let prDragStartScroll = 0;
+  let prDragPointerId = null;
+
+  prViewport.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') return; // en táctil ya funciona el scroll nativo
+    prDragging = true;
+    prDragMoved = false;
+    prDragStartX = e.clientX;
+    prDragStartScroll = prViewport.scrollLeft;
+    prDragPointerId = e.pointerId;
+  });
+
+  prViewport.addEventListener('pointermove', (e) => {
+    if (!prDragging) return;
+    const delta = e.clientX - prDragStartX;
+    if (!prDragMoved && Math.abs(delta) > 5) {
+      prDragMoved = true;
+      prViewport.classList.add('dragging');
+      prStop();
+      // El puntero solo se captura una vez confirmado el arrastre real. Capturarlo desde
+      // pointerdown (como antes) hace que el navegador redirija el pointerup/click resultante
+      // al propio viewport en vez de a la card tocada, y closest('.pr-card') nunca la encuentra:
+      // por eso ningún click, ni siquiera uno normal sin arrastre, abría la ficha.
+      try { prViewport.setPointerCapture(prDragPointerId); } catch (err) { /* noop */ }
+    }
+    if (prDragMoved) prViewport.scrollLeft = prDragStartScroll - delta;
+  });
+
+  function prEndDrag() {
+    if (!prDragging) return;
+    prDragging = false;
+    if (prDragMoved) {
+      prViewport.classList.remove('dragging');
+      const viewportWidth = prViewport.getBoundingClientRect().width;
+      const page = Math.round(prViewport.scrollLeft / viewportWidth);
+      prGo(Math.max(0, Math.min(prMaxPage(), page)));
+      prStart();
+    }
+  }
+  prViewport.addEventListener('pointerup', prEndDrag);
+  prViewport.addEventListener('pointercancel', prEndDrag);
+
   const prCarousel = document.querySelector('.pr-carousel');
   if (prCarousel) {
     prCarousel.addEventListener('mouseenter', prStop);
@@ -349,7 +542,31 @@ if (prTrack) {
   document.addEventListener('visibilitychange', () => {
     document.hidden ? prStop() : prStart();
   });
-  window.addEventListener('resize', () => { prRenderDots(); prGo(0); });
+
+  // ResizeObserver en vez de solo "resize": también se dispara con el tamaño real ya calculado
+  // la primera vez que el visor se mide (no depende de que el layout esté listo en el instante
+  // exacto en que corre este script, que era la causa de que a veces las cards quedaran en 0px).
+  function prResetToFirstPage() {
+    // Al cambiar el ancho de las cards, el scrollLeft en píxeles ya no corresponde a la misma
+    // página: se resetea al instante (sin animación) a la primera página.
+    prSizeCards();
+    prRenderDots();
+    prPage = 0;
+    prSyncingScroll = true;
+    prViewport.scrollLeft = 0;
+    prDots.querySelectorAll('button').forEach((d, j) => d.classList.toggle('active', j === 0));
+  }
+
+  if ('ResizeObserver' in window) {
+    let prResizeTimer = null;
+    new ResizeObserver(() => {
+      clearTimeout(prResizeTimer);
+      prResizeTimer = setTimeout(prResetToFirstPage, 50);
+    }).observe(prViewport);
+  } else {
+    prSizeCards();
+    window.addEventListener('resize', prResetToFirstPage);
+  }
 
   prRenderDots();
   prGo(0);
@@ -406,19 +623,25 @@ if (prTrack) {
       prGalImg.src = p.imagenes[galIndex];
       prGalImg.alt = `${p.nombre} - imagen ${galIndex + 1}`;
       prGalImg.onload = () => prGalImg.classList.remove('gal-fade');
-      setTimeout(() => prGalImg.classList.remove('gal-fade'), 250);
+      setTimeout(() => prGalImg.classList.remove('gal-fade'), 300);
     }, 150);
     document.getElementById('prGalCount').textContent = `${galIndex + 1} / ${total}`;
     const dotsWrap = document.getElementById('prGalDots');
-    dotsWrap.innerHTML = '';
-    p.imagenes.forEach((_, k) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.setAttribute('aria-label', `Ver imagen ${k + 1}`);
-      if (k === galIndex) b.classList.add('active');
-      b.addEventListener('click', () => { galIndex = k; prShowGalImage(); });
-      dotsWrap.appendChild(b);
-    });
+    // Solo se reconstruyen los puntos si cambia el total de imágenes (otra ficha). Si no,
+    // se reutilizan los mismos botones y solo se alterna "active" para que la transición
+    // CSS se vea (recrearlos en cada cambio de imagen la impedía, al no existir un estado
+    // "antes" del que animar).
+    if (dotsWrap.children.length !== total) {
+      dotsWrap.innerHTML = '';
+      p.imagenes.forEach((_, k) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', `Ver imagen ${k + 1}`);
+        b.addEventListener('click', () => { galIndex = k; prShowGalImage(); });
+        dotsWrap.appendChild(b);
+      });
+    }
+    [...dotsWrap.children].forEach((b, k) => b.classList.toggle('active', k === galIndex));
     const showArrows = total > 1;
     document.getElementById('prGalPrev').style.display = showArrows ? '' : 'none';
     document.getElementById('prGalNext').style.display = showArrows ? '' : 'none';
@@ -426,6 +649,7 @@ if (prTrack) {
   }
 
   prTrack.addEventListener('click', (e) => {
+    if (prDragMoved) { prDragMoved = false; return; } // fue un arrastre, no un click
     const card = e.target.closest('.pr-card');
     if (card) prOpenFicha(Number(card.dataset.i));
   });
@@ -495,7 +719,7 @@ if (paModal && paImg) {
       paImg.src = p.imagenes[paGal];
       paImg.alt = `${p.titulo} - foto ${paGal + 1}`;
       paImg.onload = () => paImg.classList.remove('pa-fade');
-      setTimeout(() => paImg.classList.remove('pa-fade'), 250);
+      setTimeout(() => paImg.classList.remove('pa-fade'), 300);
     }, 150);
     paCount.textContent = `${paGal + 1} / ${total}`;
     const multi = total > 1;
