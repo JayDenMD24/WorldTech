@@ -134,9 +134,17 @@ if (miTrack) {
   originalCards.forEach((card) => {
     const clone = card.cloneNode(true);
     clone.setAttribute('aria-hidden', 'true');
-    clone.querySelectorAll('input').forEach((input) => (input.tabIndex = -1));
+    clone.querySelectorAll('input, textarea').forEach((input) => (input.tabIndex = -1));
     miTrack.appendChild(clone);
   });
+
+  // Las áreas de proyecto muestran el nombre completo: se autoajustan en alto
+  function miGrowAreas() {
+    miTrack.querySelectorAll('textarea.mi-proy').forEach((ta) => {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    });
+  }
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const SPEED = 0.6; // px por frame
@@ -177,7 +185,11 @@ if (miTrack) {
   }
 
   measure();
+  miGrowAreas();
   window.addEventListener('resize', measure);
+  window.addEventListener('resize', miGrowAreas);
+  window.addEventListener('load', miGrowAreas);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(miGrowAreas);
 
   // Pausa el carrusel cuando no está en pantalla (ahorra CPU/batería)
   if ('IntersectionObserver' in window) {
@@ -242,9 +254,9 @@ document.querySelectorAll('.flip-card').forEach((card) => {
 
 // Objetivos: rotación automática con fade
 const objetivos = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-  'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.',
-  'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.',
+  'Conectar a estudiantes de todas las facultades para abordar problemáticas reales combinando la tecnología con los conocimientos de cada disciplina.',
+  'Crear prototipos y soluciones tecnológicas que resuelvan necesidades concretas en la universidad, la región y la industria.',
+  'Capacitar a los miembros en liderazgo, formulación de proyectos, desarrollo de software y metodologías de investigación.',
 ];
 const objTexto = document.getElementById('objTexto');
 const objDots = document.getElementById('objDots');
@@ -313,76 +325,69 @@ if (objTexto && objDots) {
 // ===== PROYECTOS: carrusel 3 en 3 + ficha modal =====
 const proyectos = [
   {
-    nombre: 'Proyecto #1',
-    lineas: 'Desarrollo web, IA...',
-    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    nombre: 'SISTEMA DE CONTROL DE ASISTENCIA UNIVERSITARIA MEDIENTE TECNOLOGIAS NFC',
+    lineas: 'Desarrollo web, IA, IoT, NFC',
+    resumen: 'Este proyecto desarrolla un prototipo funcional para automatizar la asistencia académica en la Universidad del Sinú mediante tarjetas NFC, lectura con Arduino (PN532) e interfaz en Tkinter. Al validar la tarjeta, el sistema identifica al estudiante en tiempo real, guarda el registro en SQLite y permite consultar asistencias filtradas por código, salón y clase, quedando pendiente únicamente la modernización visual de la interfaz.',
     participacion: 'EDESI 2026, ENISI 2026',
-    anexos: ['documento.pdf', 'resultados.xlsx'],
-    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
-    autores: ['Autor 1', 'Autor 2', 'Autor 3'],
-    tecnologias: [['bi-filetype-html', 'HTML5'], ['bi-filetype-css', 'CSS3'], ['bi-filetype-js', 'JS']],
+    anexos: [
+      { nombre: 'Documento del proyecto (PDF)', url: 'assets/proyecto-nfc.pdf' },
+      { nombre: 'Video demostrativo (YouTube)', url: 'https://www.youtube.com/watch?v=l2ntAK18uuY' },
+    ],
+    imagenes: ['assets/poster-julian.jpg'],
+    autores: [{ nombre: 'Julian David Lopez Ricardo', foto: 'assets/foto-Julian.jpg' }],
+    tecnologias: [['bi-cpu', 'Arduino'], ['bi-broadcast', 'NFC'], ['bi-database', 'Base de datos'], ['bi-robot', 'IA']],
   },
   {
-    nombre: 'Proyecto #2',
-    lineas: 'IoT, Sistemas embebidos...',
-    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    nombre: 'APLICACIÓN DE TECNOLOGÍAS EMERGENTES (IOT, BLOCKCHAIN Y ERP) PARA EL MONITOREO INTELIGENTE Y EL BIENESTAR ANIMAL EN EL FORTALECIMIENTO DEL SECTOR AGROPECUARIO EN CÓRDOBA.',
+    lineas: 'IoT, Desarrollo de software, ERP, IA',
+    resumen: 'Este proyecto propone modernizar la ganadería en Córdoba mediante la integración de IoT, Blockchain, ERP y Machine Learning. A través del monitoreo en tiempo real de variables fisiológicas y de comportamiento en el ganado bovino, el sistema permite la detección temprana de enfermedades, la predicción de eventos productivos y la gestión transparente de datos, mejorando el bienestar animal y la competitividad de los productores locales.',
     participacion: 'EDESI 2026, ENISI 2026',
-    anexos: ['documento.pdf', 'resultados.xlsx'],
-    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
-    autores: ['Autor 1', 'Autor 2'],
-    tecnologias: [['bi-cpu', 'IoT'], ['bi-git', 'Git']],
+    anexos: [
+      { nombre: 'Documento del proyecto (PDF)', url: 'assets/proyecto-iot.pdf' },
+      { nombre: 'Video demostrativo (YouTube)', url: 'https://www.youtube.com/watch?v=8yE7gNAbgCk' },
+    ],
+    imagenes: ['assets/poster-marcfran.jpg'],
+    autores: [{ nombre: 'Marfranc Javier Hernández Guzman', foto: 'assets/marfranc-foto1.jpg' }],
+    tecnologias: [['bi-broadcast', 'LoRa'], ['bi-lock', 'HTTPS'], ['bi-gear', 'ERP'], ['bi-database', 'Bases de datos']],
   },
   {
-    nombre: 'Proyecto #3',
-    lineas: 'Visión artificial, Robótica...',
-    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    nombre: 'CORCIPRO (CÓRDOBA CIBER PROTEGIDA). DISEÑO DE UN SISTEMA DE SEGURIDAD CIBERNÉTICA COLABORATIVO PARA LAS PEQUEÑAS Y MEDIANAS EMPRESAS (PYMES) EN CÓRDOBA, 2026.',
+    lineas: 'Desarrollo Web, ciberseguridad, IA, gestion de datos',
+    resumen: 'CORCIPRO es un plan de seguridad cibernética colaborativo diseñado para proteger y fortalecer a las PYMEs de Córdoba frente a las amenazas digitales. Ante la falta de recursos técnicos y económicos del sector, el proyecto promueve la cooperación empresarial, la formación en seguridad digital y la creación de redes de respuesta conjunta, construyendo un ecosistema regional más resiliente y competitivo.',
     participacion: 'EDESI 2026, ENISI 2026',
-    anexos: ['documento.pdf', 'resultados.xlsx'],
-    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
-    autores: ['Autor 1', 'Autor 2', 'Autor 3'],
-    tecnologias: [['bi-filetype-py', 'Python'], ['bi-gpu-card', 'CV']],
+    anexos:  [
+      { nombre: 'Documento del proyecto (PDF)', url: 'assets/proyecto-corcipro.pdf' },
+      { nombre: 'Video demostrativo (YouTube)', url: 'https://youtu.be/M1pITN-tSmo' },
+    ],
+    imagenes: ['assets/poster-CORCIPRO.jpg'],
+    autores: [{ nombre: 'Daniel José Escobar Soto', foto: 'assets/daniel-foto.jpg' }],
+    tecnologias: [['bi-database', 'Base de datos'], ['bi-plug', 'APIs'], ['bi-robot', 'IA'], ['bi-cloud', 'Infraestructura en la nube']],
   },
   {
-    nombre: 'Proyecto #4',
+    nombre: 'HOUSECRAB. DESARROLLO DE UNA APLICACIÓN MÓVIL ORIENTADA AL REGISTRO Y BÚSQUEDA DE RESIDENCIAS PARA ESTUDIANTES DE LA UNIVERSIDAD DEL SINÚ EN LA CIUDAD DE MONTERÍA, CÓRDOBA.',
     lineas: 'Desarrollo móvil, UX...',
-    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    resumen: 'El proyecto consiste en el desarrollo de una aplicación móvil que facilite a los estudiantes de la Universidad del Sinú la búsqueda de residencias en la ciudad de Montería, Córdoba donde puedan alojarse de forma segura durante su formación académica, además de ayudar a los dueños de los domicilios en el registro y promoción de estos dentro de la comunidad estudiantil.',
     participacion: 'EDESI 2026, ENISI 2026',
-    anexos: ['documento.pdf', 'resultados.xlsx'],
-    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
-    autores: ['Autor 1', 'Autor 2'],
+    anexos:  [
+      { nombre: 'Documento del proyecto (PDF)', url: 'assets/proyecto-housecrab.pdf' },
+      { nombre: 'Video demostrativo (YouTube)', url: 'https://www.youtube.com/watch?v=Op6RVkOC70g' },
+    ],
+    imagenes: ['assets/poster-medrano.jpg'],
+    autores: [{ nombre: 'José Daniel Medrano Domínguez', foto: 'assets/medrano-foto.jpg' }],
     tecnologias: [['bi-phone', 'Móvil'], ['bi-palette', 'UX']],
   },
   {
-    nombre: 'Proyecto #5',
-    lineas: 'Ciberseguridad, Redes...',
-    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
+    nombre: 'U$COINS: CREANDO UNA CULTURA DE INCENTIVOS EN LA EDUCACIÓN SUPERIOR ',
+    lineas: 'Desarrollo Web, seguridad informatica, Gamificacion.',
+    resumen: 'El proyecto U$COINS desarrolla una moneda virtual para mejorar el rendimiento académico y la participación estudiantil en la universidad, permitiendo a los estudiantes ganar y redimir créditos mediante su carnet estudiantil. Vinculado al semillero WorldTech, este proyecto promueve la investigación aplicada y el desarrollo tecnológico, integrando U$COINS en prácticas, tesis y consultorías, y permitiendo a los estudiantes aplicar conocimientos teóricos y desarrollar habilidades relevantes para su futura carrera.',
     participacion: 'EDESI 2026, ENISI 2026',
-    anexos: ['documento.pdf', 'resultados.xlsx'],
-    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
-    autores: ['Autor 1', 'Autor 2', 'Autor 3'],
-    tecnologias: [['bi-shield-lock', 'Sec'], ['bi-hdd-network', 'Redes']],
-  },
-  {
-    nombre: 'Proyecto #6',
-    lineas: 'Datos, Machine Learning...',
-    resumen: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    objetivos: ['Objetivo 1...', 'Objetivo 2...', 'Objetivo 3...'],
-    participacion: 'EDESI 2026, ENISI 2026',
-    anexos: ['documento.pdf', 'resultados.xlsx'],
-    imagenes: ['assets/placeholder.jpg', 'assets/placeholder.jpg'],
-    autores: ['Autor 1', 'Autor 2'],
-    tecnologias: [['bi-bar-chart', 'Datos'], ['bi-robot', 'ML']],
+    anexos: [
+      { nombre: 'Documento del proyecto (PDF)', url: 'assets/proyecto-uscoins.pdf' },
+      { nombre: 'Video demostrativo (YouTube)', url: 'https://www.youtube.com/watch?v=gZQ1o-kjOkM' },
+    ],
+    imagenes: ['assets/uscoins-1.jpg'],
+    autores: [{ nombre: 'Andres Arturo Padilla Herrera', foto: 'assets/miembro-andres.jpg' }],
+    tecnologias: [['bi-database', 'Base de datos'], ['bi-key', 'JSON Web Tokens'], ['bi-shield-lock', 'HttpOnly']],
   },
 ];
 
@@ -414,7 +419,6 @@ if (prTrack) {
       <div class="pr-card-media"><img src="${p.imagenes[0]}" alt="${p.nombre}" loading="lazy" /></div>
       <div class="pr-card-body">
         <h3>${p.nombre}</h3>
-        <p>${p.descripcion}</p>
         <span class="pr-more">Toca para saber más</span>
       </div>`;
     prTrack.appendChild(card);
@@ -601,13 +605,33 @@ if (prTrack) {
     document.getElementById('prLineas').textContent = p.lineas;
     document.getElementById('prResumen').textContent = p.resumen;
     document.getElementById('prPart').textContent = p.participacion;
-    document.getElementById('prObjetivos').innerHTML =
-      p.objetivos.map((o) => `<li>${o}</li>`).join('');
-    document.getElementById('prAnexo1').textContent = p.anexos[0] || '';
-    document.getElementById('prAnexo2').textContent = p.anexos[1] || '';
+    // Anexos: acepta { nombre, url } o texto simple (sin enlace)
+    ['prAnexo1', 'prAnexo2'].forEach((id, k) => {
+      const a = document.getElementById(id);
+      const anexo = p.anexos[k];
+      if (!anexo) { a.textContent = ''; a.removeAttribute('href'); return; }
+      if (typeof anexo === 'string') {
+        a.textContent = anexo;
+        a.removeAttribute('href');
+        a.removeAttribute('target');
+        return;
+      }
+      a.textContent = anexo.nombre;
+      a.href = anexo.url;
+      if (/^https?:\/\//i.test(anexo.url)) {
+        a.target = '_blank';
+        a.rel = 'noopener';
+      } else {
+        a.removeAttribute('target');
+        a.removeAttribute('rel');
+      }
+    });
     prShowGalImage();
     document.getElementById('prAutores').innerHTML = p.autores
-      .map((a) => `<span title="${a}"><i class="bi bi-person-circle"></i></span>`)
+      .map((a) => {
+        if (typeof a === 'string') return `<span title="${a}"><i class="bi bi-person-circle"></i></span>`;
+        return `<span class="pr-autor" title="${a.nombre}"><img src="${a.foto}" alt="Foto de ${a.nombre}" loading="lazy" onerror="this.style.display='none'" /><small>${a.nombre}</small></span>`;
+      })
       .join('');
     document.getElementById('prTec').innerHTML = p.tecnologias
       .map(([icon, label]) => `<span title="${label}"><i class="bi ${icon}"></i><small>${label}</small></span>`)
@@ -683,18 +707,13 @@ if (prTrack) {
 const participaciones = [
   {
     titulo: 'EDESI 2026',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    imagenes: ['assets/part-detalle.jpg', 'assets/part-edesi.jpg'],
+    descripcion: 'El semillero de investigación WorldTech representó con éxito a la Universidad del Sinú en el Encuentro Departamental de Semilleros de Investigación (EDESI) de la red RedCOLSI, consolidándose como un referente en innovación tecnológica y desarrollo regional. Los estudiantes investigadores demostraron el impacto de la investigación formativa en la resolución de problemáticas reales, fortaleciendo el compromiso del semillero con la excelencia académica y el desarrollo científico del departamento.',
+    imagenes: ['assets/edesi-1.jpg', 'assets/edesi-2.jpg', 'assets/edesi-3.jpg', 'assets/edesi-4.jpg', 'assets/edesi-5.jpg'],
   },
   {
     titulo: 'ENISI 2026',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    imagenes: ['assets/part-detalle.jpg', 'assets/part-enisi.jpg'],
-  },
-  {
-    titulo: 'RedCOLSI',
-    descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    imagenes: ['assets/part-detalle.jpg', 'assets/part-redcolsi.jpg'],
+    descripcion: 'El semillero de investigación WorldTech de la Universidad del Sinú destacó en el Encuentro Institucional de Semilleros de Investigación (ENISI), presentando un abanico de proyectos tecnológicos orientados a resolver problemáticas reales del entorno regional y académico, con propuestas innovadoras en áreas como automatización con tecnologías NFC, monitoreo ganadero mediante IoT y tecnologías emergentes, los estudiantes investigadores revalidaron el compromiso de WorldTech con la investigación formativa, la excelencia académica y el desarrollo científico desde las aulas.',
+    imagenes: ['assets/enisi-1.jpg', 'assets/enisi-2.jpg', 'assets/enisi-3.jpg', 'assets/enisi-4.jpg', 'assets/enisi-5.jpg', 'assets/enisi-6.jpg', 'assets/enisi-7.jpg'],
   },
 ];
 
