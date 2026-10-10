@@ -144,6 +144,12 @@ if (miTrack) {
       ta.style.height = 'auto';
       ta.style.height = ta.scrollHeight + 'px';
     });
+    // Cabeceras a la misma altura para que el contenido quede alineado entre fichas
+    const heads = miTrack.querySelectorAll('.mi-card-head');
+    heads.forEach((h) => { h.style.minHeight = ''; });
+    let maxH = 0;
+    heads.forEach((h) => { maxH = Math.max(maxH, h.offsetHeight); });
+    heads.forEach((h) => { h.style.minHeight = maxH + 'px'; });
   }
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -204,7 +210,6 @@ if (miTrack) {
   let dragMoved = false;
 
   miTrack.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'touch') return; // en táctil se deja el scroll nativo/autoplay
     dragging = true;
     dragMoved = false;
     dragStartX = e.clientX;
@@ -281,6 +286,23 @@ if (objTexto && objDots) {
     objDots.appendChild(dot);
   });
   const dots = objDots.querySelectorAll('button');
+
+  // La caja toma el alto del objetivo más largo (sin espacio sobrante y sin saltos al rotar)
+  function fitObjetivos() {
+    const actual = objTexto.textContent;
+    objTexto.style.minHeight = '';
+    let max = 0;
+    objetivos.forEach((t) => {
+      objTexto.textContent = t;
+      max = Math.max(max, objTexto.offsetHeight);
+    });
+    objTexto.textContent = actual;
+    objTexto.style.minHeight = max + 'px';
+  }
+  fitObjetivos();
+  window.addEventListener('resize', fitObjetivos);
+  window.addEventListener('load', fitObjetivos);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitObjetivos);
 
   function showObjetivo(i) {
     objIndex = i;
@@ -580,6 +602,21 @@ if (prTrack) {
   const prModal = document.getElementById('prModal');
   const prClose = document.getElementById('prClose');
   const prGalImg = document.getElementById('prGalImg');
+  const prCard = prModal.querySelector('.pr-modal-card');
+  // Contenido de la ficha en un contenedor propio para poder escalarlo y evitar el scroll
+  const prFit = document.createElement('div');
+  prFit.className = 'pr-fit';
+  [...prCard.children].forEach((k) => { if (!k.classList.contains('pr-close')) prFit.appendChild(k); });
+  prCard.appendChild(prFit);
+  function prFitFicha() {
+    prFit.style.zoom = 1;
+    if (prModal.hidden || window.innerWidth <= 900) return; // en móvil la ficha se desplaza
+    const cs = getComputedStyle(prCard);
+    const avail = prCard.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - 4;
+    const h = prFit.offsetHeight;
+    if (h > avail) prFit.style.zoom = Math.max(0.55, avail / h).toFixed(3);
+  }
+  window.addEventListener('resize', prFitFicha);
   let fichaIndex = 0;
   let galIndex = 0;
 
@@ -591,6 +628,8 @@ if (prTrack) {
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
     prClose.focus();
+    prCard.scrollTop = 0;
+    prFitFicha();
   }
   function prCloseFicha() {
     prModal.hidden = true;
@@ -649,7 +688,6 @@ if (prTrack) {
       prGalImg.onload = () => prGalImg.classList.remove('gal-fade');
       setTimeout(() => prGalImg.classList.remove('gal-fade'), 300);
     }, 150);
-    document.getElementById('prGalCount').textContent = `${galIndex + 1} / ${total}`;
     const dotsWrap = document.getElementById('prGalDots');
     // Solo se reconstruyen los puntos si cambia el total de imágenes (otra ficha). Si no,
     // se reutilizan los mismos botones y solo se alterna "active" para que la transición
@@ -708,7 +746,8 @@ const participaciones = [
   {
     titulo: 'EDESI 2026',
     descripcion: 'El semillero de investigación WorldTech representó con éxito a la Universidad del Sinú en el Encuentro Departamental de Semilleros de Investigación (EDESI) de la red RedCOLSI, consolidándose como un referente en innovación tecnológica y desarrollo regional. Los estudiantes investigadores demostraron el impacto de la investigación formativa en la resolución de problemáticas reales, fortaleciendo el compromiso del semillero con la excelencia académica y el desarrollo científico del departamento.',
-    imagenes: ['assets/edesi-1.jpg', 'assets/edesi-2.jpg', 'assets/edesi-3.jpg', 'assets/edesi-4.jpg', 'assets/edesi-5.jpg'],
+    // La foto 5 va primera: es la portada de la tarjeta y la primera del visor
+    imagenes: ['assets/edesi-5.jpg', 'assets/edesi-1.jpg', 'assets/edesi-2.jpg', 'assets/edesi-3.jpg', 'assets/edesi-4.jpg'],
   },
   {
     titulo: 'ENISI 2026',
@@ -718,6 +757,18 @@ const participaciones = [
 ];
 
 const paModal = document.getElementById('paModal');
+const paDescEl = document.getElementById('paDesc');
+// Reduce la letra de la descripción (hasta un mínimo legible) para que quepa sin scroll
+function paFitDesc() {
+  if (!paDescEl) return;
+  let size = 13;
+  paDescEl.style.fontSize = size + 'px';
+  while (paDescEl.scrollHeight > paDescEl.clientHeight + 1 && size > 10.5) {
+    size -= 0.5;
+    paDescEl.style.fontSize = size + 'px';
+  }
+}
+window.addEventListener('resize', () => { if (paModal && !paModal.hidden) paFitDesc(); });
 const paClose = document.getElementById('paClose');
 const paImg = document.getElementById('paImg');
 const paCount = document.getElementById('paCount');
@@ -757,6 +808,8 @@ if (paModal && paImg) {
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
     paClose.focus();
+    paDescEl.scrollTop = 0;
+    paFitDesc();
   }
 
   function paCloseModal() {

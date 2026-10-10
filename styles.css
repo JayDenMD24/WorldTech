@@ -40,6 +40,45 @@ body {
   overflow-x: hidden;
 }
 
+/* ============ SCROLLBARS PERSONALIZADAS ============ */
+/* Delgadas, redondeadas y en blanco translúcido sobre el fondo oscuro, en vez de la barra
+   gris predeterminada del navegador. Firefox usa scrollbar-*; Chrome/Edge/Safari usan ::-webkit-scrollbar. */
+button, input, textarea, select { font-family: inherit; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.28);
+  border-radius: var(--r-pill);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.55);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* La barra de la página usa el mismo fondo oscuro del sitio para integrarse */
+html { scrollbar-color: rgba(255, 255, 255, 0.3) var(--bg); }
+html::-webkit-scrollbar { width: 10px; }
+html::-webkit-scrollbar-track { background: var(--bg); }
+
 /* ============ COMPONENTES COMPARTIDOS ============ */
 /* Subtítulo breve debajo del título de cada sección */
 .section-sub {
@@ -253,7 +292,7 @@ body {
 /* ============ QUIENES SOMOS ============ */
 .qs-section {
   position: relative;
-  padding: 110px 32px 90px;
+  padding: 110px 32px 100px;
   overflow: hidden;
 }
 
@@ -330,16 +369,17 @@ body {
   transform: rotateY(180deg);
   background: #101010;
   border-color: rgba(255,255,255,0.22);
+  padding: 20px 18px;
 }
 
+/* Texto compacto para que Misión y Visión quepan completos en la card sin scroll */
 .flip-back p {
-  font-size: 12.5px;
-  line-height: 1.65;
+  font-size: 11px;
+  line-height: 1.6;
   color: var(--muted);
   max-width: 100%;
   max-height: 100%;
   overflow-y: auto;
-  scrollbar-width: thin;
 }
 
 .flip-icon {
@@ -373,6 +413,7 @@ body {
   height: 100%;
   max-height: 560px;
   object-fit: cover;
+  object-position: 50% 8%;
   display: block;
 }
 
@@ -387,8 +428,7 @@ body {
   background: #fff;
   color: #111;
   border-radius: var(--r-lg);
-  padding: 22px 28px 18px;
-  min-height: 148px;
+  padding: 20px 26px 16px;
 }
 
 .obj-box p {
@@ -406,7 +446,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 12px;
 }
 
 .obj-dots button {
@@ -432,6 +472,14 @@ body {
 .obj-dots button.active {
   background: #000;
   width: 34px;
+}
+
+/* Área táctil ampliada de los puntos de navegación (sin cambiar su tamaño visual) */
+.obj-dots button, .pr-dots button, .pr-gal-dots button { position: relative; }
+.obj-dots button::after, .pr-dots button::after, .pr-gal-dots button::after {
+  content: "";
+  position: absolute;
+  inset: -14px -3px;
 }
 
 /* ============ MIEMBROS ============ */
@@ -551,23 +599,20 @@ img.mi-avatar {
   touch-action: pan-y;
 }
 
+.mi-track .mi-proy { touch-action: pan-y; }
+
 .mi-track.dragging {
   cursor: grabbing;
 }
 
 .mi-card {
-  flex: 0 0 320px;
+  flex: 0 0 350px;
   background: var(--card-bg);
   color: var(--text);
   border: 1px solid var(--card-border);
   border-radius: var(--r-lg);
   overflow: hidden;
   transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.mi-card:hover {
-  border-color: var(--card-border-hover);
-  transform: translateY(-5px);
 }
 
 .mi-card-head {
@@ -587,13 +632,13 @@ img.mi-avatar {
   gap: 6px;
 }
 
+/* El nombre completo se muestra en 2+ líneas, sin recortarse con "..." */
 .mi-name {
   max-width: 100%;
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .mi-badge {
@@ -826,11 +871,12 @@ img.mi-avatar {
   border-radius: var(--r-lg);
   padding: 56px 60px 64px;
   color: #f2f2f2;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
 
+.pr-modal-card { scrollbar-width: none; -ms-overflow-style: none; }
 .pr-modal-card::-webkit-scrollbar { display: none; }
+.pa-desc::-webkit-scrollbar { display: none; }
+
 
 .pr-close {
   position: absolute;
@@ -850,8 +896,9 @@ img.mi-avatar {
 
 .pr-ficha-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 48px;
+  /* Mismas columnas y separación que .pr-meta: el póster termina a la altura del panel de Autores */
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   align-items: start;
 }
 
@@ -868,7 +915,7 @@ img.mi-avatar {
 .pr-gal-frame img {
   width: 100%;
   height: 450px;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   transition: opacity 0.3s ease;
 }
@@ -893,21 +940,12 @@ img.mi-avatar {
 .pr-gal-arrow.left { left: 12px; }
 .pr-gal-arrow.right { right: 12px; }
 
-.pr-gal-count {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 12px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: var(--r-pill);
-  padding: 4px 12px;
-}
+.pr-gal { position: relative; }
 
 .pr-gal-dots {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 8px;
 }
 
@@ -921,7 +959,7 @@ img.mi-avatar {
 
 .pr-gal-dots button.active { background: #fff; width: 34px; }
 
-.pr-info { font-size: 13px; line-height: 1.7; }
+.pr-info { font-size: 13px; line-height: 1.7; padding-left: 22px; }
 .pr-info h3 { font-size: 18px; margin-bottom: 8px; }
 .pr-info p { margin-bottom: 10px; }
 .pr-info ol { margin: 0 0 10px 22px; }
@@ -944,9 +982,10 @@ img.mi-avatar {
 .pr-autores #prAutores,
 .pr-tec #prTec {
   display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  margin-top: 6px;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+  margin-top: 8px;
 }
 
 .pr-autores #prAutores { font-size: 22px; color: #111; }
@@ -972,15 +1011,16 @@ img.mi-avatar {
   color: #111;
 }
 
+/* Tecnología: ícono + texto en una sola línea, igual que los autores */
 .pr-tec #prTec span {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 2px;
-  font-size: 22px;
+  gap: 8px;
+  font-size: 20px;
 }
 
-.pr-tec #prTec small { font-size: 11px; }
+.pr-tec #prTec small { font-size: 13px; font-weight: 700; }
 
 .pr-tec {
   border: 1px solid rgba(255,255,255,0.5);
@@ -1039,11 +1079,12 @@ img.mi-avatar {
   width: 100%;
   height: 220px;
   object-fit: cover;
-  object-position: top center;
+  object-position: 50% 42%;
   display: block;
   transition: transform 0.5s ease;
 }
 
+.pa-card-media img[src*="enisi"] { object-position: 50% 0%; }
 .pa-card:hover .pa-card-media img { transform: scale(1.06); }
 
 .pa-card-foot {
@@ -1092,20 +1133,17 @@ img.mi-avatar {
 
 .pa-modal[hidden] { display: none; }
 
+/* Alto fijo: la imagen no se mueve aunque la descripción sea larga; el texto hace scroll por dentro */
 .pa-modal-card {
   position: relative;
   width: min(960px, 94vw);
-  max-height: 86vh;
-  overflow-y: auto;
+  height: min(86vh, 640px);
+  overflow: hidden;
   background: #050505;
   border: 1px solid rgba(255,255,255,0.7);
   border-radius: var(--r-lg);
   color: #f2f2f2;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
-
-.pa-modal-card::-webkit-scrollbar { display: none; }
 
 .pa-close {
   position: absolute;
@@ -1121,8 +1159,9 @@ img.mi-avatar {
 
 .pa-modal-grid {
   display: grid;
-  grid-template-columns: 1fr 260px;
-  align-items: stretch;
+  grid-template-columns: 1fr 380px;
+  grid-template-rows: minmax(0, 1fr);
+  height: 100%;
 }
 
 .pa-view {
@@ -1130,13 +1169,14 @@ img.mi-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 58px 40px;
+  padding: 24px 58px 52px;
+  min-width: 0;
   min-height: 0;
 }
 
 .pa-view img {
   max-width: 100%;
-  max-height: 70vh;
+  max-height: 100%;
   object-fit: contain;
   border-radius: var(--r-md);
   display: block;
@@ -1185,13 +1225,15 @@ img.mi-avatar {
   border-left: 1px solid rgba(255,255,255,0.7);
   padding: 48px 22px 30px;
   display: flex;
+  min-height: 0;
 }
 
 .pa-desc-box {
   flex: 1;
+  min-height: 0;
   background: #161616;
   border-radius: var(--r-sm);
-  padding: 28px 22px;
+  padding: 24px 8px 20px 18px;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -1200,19 +1242,28 @@ img.mi-avatar {
 .pa-desc-box h3 {
   font-size: 19px;
   font-weight: 700;
-  margin-bottom: 60px;
+  margin-bottom: 18px;
+  padding-right: 10px;
 }
 
 .pa-desc-tag {
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  padding-right: 10px;
 }
 
+/* La descripción es la única parte que hace scroll */
 .pa-desc {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0;
+  scrollbar-width: none;
   font-size: 13px;
   line-height: 1.7;
   color: var(--muted);
+  text-align: left;
 }
 
 /* ============ UBICACION ============ */
@@ -1234,13 +1285,15 @@ img.mi-avatar {
   font-size: clamp(30px, 4.5vw, 48px);
   font-weight: 700;
   letter-spacing: 1px;
-  margin-bottom: 14px;
 }
 
+/* Mismo estilo que .section-sub (subtítulos del resto de secciones) */
 .ub-sub {
-  font-size: clamp(13px, 1.8vw, 16px);
-  color: var(--text);
+  font-size: clamp(14px, 1.6vw, 16px);
+  color: var(--muted);
   line-height: 1.6;
+  max-width: 700px;
+  margin: 10px auto 0;
 }
 
 .ub-addr {
@@ -1326,15 +1379,15 @@ img.mi-avatar {
   font-size: clamp(30px, 4.5vw, 48px);
   font-weight: 700;
   letter-spacing: 1px;
-  margin-bottom: 24px;
 }
 
 .ct-sub {
   position: relative;
-  font-size: clamp(14px, 2vw, 18px);
-  line-height: 1.8;
-  color: var(--text);
-  margin-bottom: 34px;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 600px;
+  margin: 10px auto 34px;
 }
 
 .ct-btn {
@@ -1403,13 +1456,16 @@ img.mi-avatar {
       "objetivos"
       "foto";
   }
-  .flip-card, .flip-inner { min-height: 230px; }
-  .qs-foto img { min-height: 280px; max-height: 360px; }
+  .flip-card, .flip-inner { min-height: 260px; }
+  /* Recorte centrado (franja media de la foto), igual que la portada de ENISI en Participaciones,
+     en vez de mostrar la parte alta donde salen las caras */
+  .qs-foto { min-height: 0; }
+  .qs-foto img { height: 260px; min-height: 0; max-height: none; object-position: 50% 8%; }
 
   .mi-section { padding: 90px 18px 70px; }
   .mi-carousel::before, .mi-carousel::after { width: 48px; }
   .mi-track { gap: 18px; padding: 0 18px; }
-  .mi-card { flex-basis: 260px; }
+  .mi-card { flex-basis: 290px; }
   .mi-coord { flex-direction: row; gap: 16px; padding: 18px; }
   .mi-coord-sub { font-size: 12.5px; }
 
@@ -1421,22 +1477,25 @@ img.mi-avatar {
   .pr-close { top: 14px; right: 16px; font-size: 22px; }
   .pr-ficha-title { font-size: clamp(22px, 6vw, 26px); }
   .pr-ficha-grid { grid-template-columns: 1fr; }
+  .pr-info { padding-left: 0; }
   .pr-gal-frame img { height: 300px; }
   .pr-meta { grid-template-columns: 1fr; }
 
   .pa-section { padding: 90px 18px 70px; }
   .pa-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
-  .pa-modal-grid { grid-template-columns: 1fr; }
-  .pa-view { padding: 56px 52px 60px; min-height: 320px; }
-  .pa-view img { max-height: 62vh; }
-  .pa-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.7); padding: 22px; }
-  .pa-desc-box h3 { margin-bottom: 24px; }
+  /* Móvil: filas con proporción fija (imagen arriba, texto abajo con scroll propio) */
+  .pa-modal-card { height: min(88vh, 720px); }
+  .pa-modal-grid { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
+  .pa-view { padding: 52px 52px 56px; }
+  .pa-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.7); padding: 16px 18px 18px; }
+  .pa-desc-box { padding: 18px 6px 14px 16px; }
+  .pa-desc-box h3 { margin-bottom: 10px; font-size: 17px; }
+  .pa-desc-tag { font-size: 15px; margin-bottom: 6px; }
 
   .ct-section { padding: 90px 18px 70px; }
   .ub-section { padding: 90px 18px 70px; }
   .ub-map iframe { height: 300px; }
   .ct-panel { padding: 48px 22px 56px; }
-  .ct-title { margin-bottom: 20px; }
   .ct-sub { margin-bottom: 28px; }
   .ct-btn { width: 100%; max-width: 340px; justify-content: center; padding: 16px 20px; }
 }
