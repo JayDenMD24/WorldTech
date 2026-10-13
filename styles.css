@@ -554,6 +554,11 @@ img.mi-avatar {
   object-position: top center;
 }
 
+/* Encuadre más bajo para fotos con aire arriba (centra el rostro) */
+img.mi-avatar--face {
+  object-position: center 32%;
+}
+
 .mi-avatar--lg {
   width: 84px;
   height: 84px;
