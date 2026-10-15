@@ -1569,3 +1569,14 @@ img.mi-avatar--face {
   }
   .ft-credit { text-align: center; }
 }
+
+/* ============ NAVBAR Y FOOTER (escritorio) ============ */
+/* Más pegados a los extremos de la pantalla */
+@media (min-width: 901px) {
+  .nav-inner { max-width: none; padding-left: clamp(16px, 1.6vw, 28px); padding-right: clamp(16px, 1.6vw, 28px); }
+  .nav-line { margin: 0 clamp(16px, 1.6vw, 28px); }
+  .footer { padding-left: clamp(16px, 1.6vw, 28px); padding-right: clamp(16px, 1.6vw, 28px); }
+  /* Tres columnas: WORLDTECH queda en el centro exacto del footer, sin depender del ancho de los textos laterales */
+  .ft-inner { max-width: none; display: grid; grid-template-columns: 1fr auto 1fr; }
+  .ft-credit { justify-self: end; }
+}

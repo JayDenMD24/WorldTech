@@ -466,7 +466,7 @@ if (prTrack) {
   // sin desajustes de subpíxel que cortaran el borde de alguna card.
   function prSizeCards() {
     const perView = prPerView();
-    const viewportWidth = prViewport.getBoundingClientRect().width;
+    const viewportWidth = prViewport.clientWidth;
     const cardWidth = (viewportWidth - PR_GAP * (perView - 1)) / perView;
     [...prTrack.children].forEach((card) => {
       card.style.flex = `0 0 ${cardWidth}px`;
@@ -475,7 +475,7 @@ if (prTrack) {
 
   function prGo(page) {
     prPage = (page + prMaxPage() + 1) % (prMaxPage() + 1);
-    const viewportWidth = prViewport.getBoundingClientRect().width;
+    const viewportWidth = prViewport.clientWidth;
     prSyncingScroll = true;
     prViewport.scrollTo({ left: prPage * viewportWidth, behavior: 'smooth' });
     prDots.querySelectorAll('button').forEach((d, j) =>
@@ -494,7 +494,7 @@ if (prTrack) {
     }
     clearTimeout(prScrollTimer);
     prScrollTimer = setTimeout(() => {
-      const viewportWidth = prViewport.getBoundingClientRect().width;
+      const viewportWidth = prViewport.clientWidth;
       const page = Math.round(prViewport.scrollLeft / viewportWidth);
       prPage = Math.max(0, Math.min(prMaxPage(), page));
       prDots.querySelectorAll('button').forEach((d, j) => d.classList.toggle('active', j === prPage));
@@ -551,7 +551,7 @@ if (prTrack) {
     prDragging = false;
     if (prDragMoved) {
       prViewport.classList.remove('dragging');
-      const viewportWidth = prViewport.getBoundingClientRect().width;
+      const viewportWidth = prViewport.clientWidth;
       const page = Math.round(prViewport.scrollLeft / viewportWidth);
       prGo(Math.max(0, Math.min(prMaxPage(), page)));
       prStart();
@@ -741,7 +741,6 @@ if (prTrack) {
 
 // ===== PARTICIPACIONES: tarjetas + modal detalle =====
 // Para llegar a "1 / 5" agrega más rutas en "imagenes" (máx. recomendado 5).
-// Foto 6 (visor) → assets/part-detalle.jpg — es la primera foto del modal.
 const participaciones = [
   {
     titulo: 'EDESI 2026',
@@ -860,9 +859,8 @@ if (ubMap && ubSection && 'IntersectionObserver' in window) {
   }, { threshold: 0.25 }).observe(ubSection);
 }
 
-// ===== CONTACTO: correo (placeholder hasta tener el real) =====
-// TODO: reemplazar por el correo real del semillero
-const CONTACT_EMAIL = 'contacto@worldtech.edu.co';
+// ===== CONTACTO: correo =====
+const CONTACT_EMAIL = 'contacto@semilleroworldtech.com';
 const ctMail = document.getElementById('ctMail');
 if (ctMail) {
   ctMail.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Contacto WorldTech')}`;
